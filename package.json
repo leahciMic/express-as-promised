@@ -1,0 +1,20 @@
+{
+  "name": "express-as-promised",
+  "version": "0.1.0",
+  "description": "This is simply the Express we all know and love promisified.",
+  "main": "main.js",
+  "scripts": {
+    "test": "npm install && ./node_modules/.bin/mocha ./spec"
+  },
+  "author": "Michael Leaney <leahcimic@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.2.1",
+    "express": "^4.5.1",
+    "request": "^2.37.0",
+    "should": "^4.0.4"
+  },
+  "devDependencies": {
+    "mocha": "^1.20.1"
+  }
+}
