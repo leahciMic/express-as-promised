@@ -166,4 +166,47 @@ describe('express-as-promised', function() {
       done();
     });
   });
+
+  it('should handle multiple callbacks', function(done) {
+    app.get('/', function(req, res, next) {
+      res.status(403);
+      next();
+    }, function(req, res) {
+      return 'Hello world';
+    });
+    request(URL, function(error, response, body) {
+      response.statusCode.should.equal(403);
+      body.should.equal('Hello world');
+      done();
+    });
+  });
+
+  describe('when using express normally', function() {
+    it('should not get in the way', function(done) {
+      app.get('/', function(req, res) {
+        res.status(403);
+        res.send('Hello world');
+      });
+      request(URL, function(error, response, body) {
+        response.statusCode.should.equal(403);
+        body.should.equal('Hello world');
+        done();
+      });
+    });
+    it('should not get in the way even when using multiple callbacks', function(done) {
+      app.get('/', function(req, res, next) {
+        res.status(403);
+        next();
+      }, function(req, res) {
+        res.send('Hello world');
+      });
+      request(URL, function(error, response, body) {
+        response.statusCode.should.equal(403);
+        body.should.equal('Hello world');
+        done();
+      });
+    });
+  });
+
+
 });

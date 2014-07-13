@@ -68,7 +68,7 @@ Connection: keep-alive
 Interal Server Error
 ```
 
-You can still use a custom statusCode when required:
+You can still use a custom status code when required:
 
 ```js
 app.get('/', function(req, res) {
@@ -86,6 +86,28 @@ Date: Sun, 13 Jul 2014 05:17:03 GMT
 Connection: keep-alive
 
 Not allowed
+```
+
+And everything you're doing right now with Express, should just work.
+
+```js
+app.get('/', function(req, res, next) {
+  res.status(403);
+  next();
+}, function(req, res) {
+  res.send('Hello world');
+});
+```
+
+or even:
+
+```js
+app.get('/', function(req, res, next) {
+  res.status(403);
+  next();
+}, function(req, res) {
+  return 'Hello world';
+});
 ```
 
 ## Tests
