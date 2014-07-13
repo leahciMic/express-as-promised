@@ -1,4 +1,4 @@
-var express = require('../main.js'),
+  var express = require('../main.js'),
     request = require('request'),
     bluebird = require('bluebird'),
     app,
@@ -137,6 +137,32 @@ describe('express-as-promised', function() {
     request(URL + '/test', function(error, response, body) {
       response.statusCode.should.equal(200);
       body.should.equal('foobar');
+      done();
+    });
+  });
+
+  it('should be able to override status', function(done) {
+    app.get('/', function(req, res) {
+      res.status(403);
+      return 'Not allowed';
+    });
+
+    request(URL, function(error, response, body) {
+      response.statusCode.should.equal(403);
+      body.should.equal('Not allowed');
+      done();
+    });
+  });
+
+  it('should be able to override status', function(done) {
+    app.put('/', function(req, res) {
+      res.status(200);
+      return 'OK';
+    });
+
+    request.put(URL, {}, function(error, response, body) {
+      response.statusCode.should.equal(200);
+      body.should.equal('OK');
       done();
     });
   });

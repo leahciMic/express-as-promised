@@ -67,3 +67,27 @@ Connection: keep-alive
 
 Interal Server Error
 ```
+
+You can still use a custom statusCode when required:
+
+```js
+app.get('/', function(req, res) {
+  res.status(403);
+  return 'Not allowed';
+});
+```
+
+```text
+HTTP/1.1 403 Forbidden
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 11
+Date: Sun, 13 Jul 2014 05:17:03 GMT
+Connection: keep-alive
+
+Not allowed
+```
+
+## Tests
+
+Just simply run `npm test`

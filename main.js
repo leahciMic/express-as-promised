@@ -16,6 +16,8 @@ function replaceMethod(app, verb) {
         return e instanceof Error ? e.stack : e;
       };
 
+      var statusCode = res.statusCode;
+
       var promise = (function() {
         var value;
 
@@ -34,17 +36,21 @@ function replaceMethod(app, verb) {
 
       promise.then(
         function(value) {
-
           if (value === null || value === undefined) {
             return;
           }
-          var statusCode = verb == 'post' ? 201 : 200;
+
+          var httpStatus = verb == 'post' ? 201 : 200;
+
+          if (res.statusCode != statusCode) {
+            httpStatus = res.statusCode;
+          }
 
           var Stream = require('stream');
           if (value instanceof Stream) {
             value.pipe(res);
           } else {
-            res.status(statusCode).send(value);
+            res.status(httpStatus).send(value);
           }
         },
         function(error) {
