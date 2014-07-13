@@ -25,8 +25,31 @@ Connection: keep-alive
 Hello world
 ```
 
-You can return strings, objects, strings or their promised equivelant and if your
-callback throws or returns an error a stack trace will be sent, for example:
+## Promises
+
+You can return strings, objects, strings or their promised equivelant.
+
+```js
+app.get('/', function() {
+  var promise = bluebird.resolve('Hello world');
+  return promise;
+});
+```
+
+```text
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 7
+Date: Sat, 12 Jul 2014 14:40:14 GMT
+Connection: keep-alive
+
+Foo bar
+```
+
+## Errors
+
+If your callback throws or returns an error a stack trace will be sent, for example:
 
 ```js
 app.get('/', function() {
@@ -68,6 +91,8 @@ Connection: keep-alive
 Interal Server Error
 ```
 
+## Custom status codes
+
 You can still use a custom status code when required:
 
 ```js
@@ -87,6 +112,8 @@ Connection: keep-alive
 
 Not allowed
 ```
+
+## Can be used just like Express
 
 And everything you're doing right now with Express, should just work.
 
