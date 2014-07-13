@@ -1,4 +1,4 @@
-# Express as promised
+# Express as promised [![Build Status](https://travis-ci.org/leahciMic/express-as-promised.svg?branch=master)](https://travis-ci.org/leahciMic/express-as-promised)
 
 This is simply the Express we all know and love promisified. I'll dive right in
 with an example.
