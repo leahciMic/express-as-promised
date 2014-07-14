@@ -1,17 +1,49 @@
 # Express as promised [![Build Status](https://travis-ci.org/leahciMic/express-as-promised.svg?branch=master)](https://travis-ci.org/leahciMic/express-as-promised)
 
-This is simply the Express we all know and love promisified. I'll dive right in
-with an example.
+This is simply the Express we all know and love with a few enhancements to
+ support returning various values including promises.
+
+So instead of:
 
 ```js
-var express = require('express-as-promised'),
-    app = express();
-
-app.get('/', function() {
-  return 'Hello world';
+app.get('/', function(request, response) {
+  return quote.fetch().then(function(quote) {
+    response.send(quote);
+  });
 });
+```
 
-app.listen(3000);
+We can simply just return the promise:
+
+```js
+app.get('/', function() {
+  return quote.fetch();
+});
+```
+
+Both will result in something like:
+
+```text
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 84
+Date: Sat, 12 Jul 2014 14:40:14 GMT
+Connection: keep-alive
+
+{quote: "The true measure of a man is how he treats somebody that can him no good."}
+```
+
+## Returning values
+
+You can return strings, objects, strings or their promised equivelant.
+
+### Promises
+```js
+app.get('/', function() {
+  var promise = bluebird.resolve('Hello world');
+  return promise;
+});
 ```
 
 ```text
@@ -25,29 +57,25 @@ Connection: keep-alive
 Hello world
 ```
 
-## Promises
-
-You can return strings, objects, strings or their promised equivelant.
+### Strings
 
 ```js
-app.get('/', function() {
-  var promise = bluebird.resolve('Hello world');
-  return promise;
-});
-```
+app.get('/', function( {
+  return 'Hello world';
+})
 
 ```text
 HTTP/1.1 200 OK
 X-Powered-By: Express
 Content-Type: text/html; charset=utf-8
-Content-Length: 7
+Content-Length: 11
 Date: Sat, 12 Jul 2014 14:40:14 GMT
 Connection: keep-alive
 
-Foo bar
+Hello world
 ```
 
-## Errors
+## Errors and production
 
 If your callback throws or returns an error a stack trace will be sent, for example:
 
@@ -78,6 +106,8 @@ Error: Something went wrong
     at trim_prefix (/Users/michael/Projects/express-as-promised/node_modules/express/lib/router/index.js:263:17)
 ```
 
+### Turning off errors in production
+
 Unless `NODE_ENV` is set to production, then you'll just get:
 
 ```text
@@ -91,7 +121,7 @@ Connection: keep-alive
 Interal Server Error
 ```
 
-## Custom status codes
+### Custom status codes
 
 You can still use a custom status code when required:
 
