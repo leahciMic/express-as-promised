@@ -27,16 +27,16 @@ Both will result in something like:
 HTTP/1.1 200 OK
 X-Powered-By: Express
 Content-Type: text/html; charset=utf-8
-Content-Length: 84
+Content-Length: 87
 Date: Sat, 12 Jul 2014 14:40:14 GMT
 Connection: keep-alive
 
-{quote: "The true measure of a man is how he treats somebody that can him no good."}
+{quote: "The true measure of a man is how he treats somebody that can do him no good."}
 ```
 
 ## Returning values
 
-You can return strings, objects, strings or their promised equivelant.
+You can return strings and objects or their promised equivalent.
 
 ### Promises
 ```js
@@ -63,6 +63,7 @@ Hello world
 app.get('/', function( {
   return 'Hello world';
 })
+```
 
 ```text
 HTTP/1.1 200 OK
