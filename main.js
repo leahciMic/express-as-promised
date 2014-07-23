@@ -95,7 +95,7 @@ function replaceMethod(app, verb) {
     // call the original method with our newly modified callbacks
     originalMethod.apply(app, params);
   };
-};
+}
 
 // promisify express
 function promisifyExpress(app) {
@@ -125,7 +125,7 @@ function promisifyExpress(app) {
 // constructs an express-as-promised app
 function createApplication() {
   return promisifyExpress(express());
-};
+}
 
 // export it
 module.exports = createApplication;

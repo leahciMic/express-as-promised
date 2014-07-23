@@ -114,7 +114,7 @@ describe('express-as-promised', function() {
       response.statusCode.should.equal(200);
       body.should.equal(fs.readFileSync('./spec/basic.js').toString());
       done();
-    })
+    });
   });
 
   it('should work with all', function(done) {
