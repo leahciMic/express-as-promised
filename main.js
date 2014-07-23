@@ -5,17 +5,16 @@ var express = require('express'),
 // is our environment production?
 var PRODUCTION = process.env.NODE_ENV == 'production';
 
-/**
- * Replace verb (get, post, put, delete, and all) methods with an equivelant
- * method that is promise aware.
- */
+// this generic function is called with a route and will replace the generic verb
+// functions such as (get, post, put, delete, all), with new callbacks that are
+// aware of promises.
 function replaceMethod(app, verb) {
   // the original method we'll be overwriting
-  var originalMethod = app[verb].bind(app),
-      params = [];
+  var originalMethod = app[verb].bind(app);
 
   // the new method that is aware of promises and return types
   app[verb] = function(route) {
+    var params = [];
     // grab all the callbacks from the arguments
     var callbacks = [].slice.call(arguments, arguments.length > 1 ? 1 : 0);
 

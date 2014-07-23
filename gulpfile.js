@@ -13,7 +13,13 @@ var exec = require('child_process').exec;
 // commonly used functions
 
 function execute(command, callback){
-  exec(command, function(error, stdout, stderr){ callback(stdout); });
+  exec(command, function(error, stdout, stderr){
+    if (error) {
+      console.log(stderr);
+      process.exit();
+    }
+    callback(stdout);
+  });
 }
 
 // read the package.json
@@ -60,7 +66,7 @@ gulp.task('release', ['bump'], function(done) {
 
   execute('git log --oneline ' + version, function(diff) {
     edit('# Please enter a description for this change set.\n' + diff, function(description) {
-      execute('git add package.json -m "' + description + '"', function() {
+      execute('git commit -a -m "' + description + '"', function() {
         execute('npm version patch -m "' + description + '"', function() {
           execute('git tag ' + latest_version + ' -m "' + description + '"', function() {
             execute('git push origin master', function() {

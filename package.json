@@ -1,6 +1,6 @@
 {
   "name": "express-as-promised",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "This is simply the Express we all know and love promisified.",
   "main": "main.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "Michael Leaney <leahcimic@gmail.com> (http://lifememori.es)",
   "repository": {
     "type": "git",
-    "url" : "https://github.com/leahcimic/express-as-promised"
+    "url": "https://github.com/leahcimic/express-as-promised"
   },
   "license": "ISC",
   "dependencies": {
