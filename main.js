@@ -6,70 +6,66 @@ var PRODUCTION = process.env.NODE_ENV == 'production';
 function replaceMethod(app, verb) {
   var originalMethod = app[verb].bind(app);
 
-  app[verb] = function(route, callback) {
-    var _callback = function(req, res) {
+  app[verb] = function(route) {
+    var callbacks = [].slice.call(arguments, arguments.length > 1 ? 1 : 0);
 
-      var getErrorMessage = function(e) {
-        if (PRODUCTION) {
-          return 'Interal Server Error';
-        }
-        return e instanceof Error ? e.stack : e;
+    var newCallbacks = callbacks.map(function(callback) {
+      return function(req, res, next) {
+        var getErrorMessage = function(e) {
+          if (PRODUCTION) {
+            return 'Internal Server Error';
+          }
+          return e instanceof Error ? e.stack : e;
+        };
+
+        var promise = (function() {
+          var value;
+
+          try {
+            value = callback(req, res, next);
+          } catch(e) {
+            return bluebird.reject(getErrorMessage(e));
+          }
+
+          if (value instanceof Error) {
+            return bluebird.reject(getErrorMessage(value));
+          }
+
+          return bluebird.resolve(value);
+        })();
+
+        promise.then(
+          function(value) {
+            if (value === null || value === undefined) {
+              return;
+            }
+
+            // if it's a successful post change the status code to 201
+            if (verb == 'post' && res.statusCode == 200) {
+              res.statusCode = 201;
+            }
+
+            var Stream = require('stream');
+            if (value instanceof Stream) {
+              value.pipe(res);
+            } else {
+              res.send(value);
+            }
+          },
+          function(error) {
+            res.status(500).send(error);
+          }
+        );
       };
-
-      var statusCode = res.statusCode;
-
-      var promise = (function() {
-        var value;
-
-        try {
-          value = callback(req, res);
-        } catch(e) {
-          return bluebird.reject(getErrorMessage(e));
-        }
-
-        if (value instanceof Error) {
-          return bluebird.reject(getErrorMessage(value));
-        }
-
-        return bluebird.resolve(value);
-      })();
-
-      promise.then(
-        function(value) {
-          if (value === null || value === undefined) {
-            return;
-          }
-
-          var httpStatus = verb == 'post' ? 201 : 200;
-
-          if (res.statusCode != statusCode) {
-            httpStatus = res.statusCode;
-          }
-
-          var Stream = require('stream');
-          if (value instanceof Stream) {
-            value.pipe(res);
-          } else {
-            res.status(httpStatus).send(value);
-          }
-        },
-        function(error) {
-          res.status(500).send(error);
-        }
-      );
-    };
-
-    if (arguments.length == 1) {
-      callback = route;
-    }
+    });
 
     var params = [];
 
-    if (arguments.length != 1) {
+    if (arguments.length > 1) {
       params.push(route);
     }
 
-    params.push(_callback);
+    params = params.concat(newCallbacks);
 
     originalMethod.apply(app, params);
   };

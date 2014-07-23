@@ -175,8 +175,8 @@ describe('express-as-promised', function() {
       return 'Hello world';
     });
     request(URL, function(error, response, body) {
-      response.statusCode.should.equal(403);
       body.should.equal('Hello world');
+      response.statusCode.should.equal(403);
       done();
     });
   });
@@ -207,6 +207,4 @@ describe('express-as-promised', function() {
       });
     });
   });
-
-
 });
