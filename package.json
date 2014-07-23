@@ -1,6 +1,6 @@
 {
   "name": "express-as-promised",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "This is simply the Express we all know and love promisified.",
   "main": "main.js",
   "scripts": {
