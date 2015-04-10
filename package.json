@@ -1,6 +1,6 @@
 {
   "name": "express-as-promised",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "This is simply the Express we all know and love promisified.",
   "main": "main.js",
   "scripts": {
@@ -13,18 +13,18 @@
   },
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^2.2.1",
-    "express": "^4.5.1",
-    "request": "^2.37.0",
-    "should": "^4.0.4",
-    "gulp-bump": "^0.1.10"
+    "bluebird": "^2.9.24",
+    "express": "^4.12.3",
+    "request": "^2.55.0",
+    "should": "^5.2.0"
   },
   "devDependencies": {
-    "mocha": "^1.20.1",
-    "node-edit": "0.0.1",
-    "gulp": "^3.8.6",
-    "gulp-bump": "^0.1.10",
-    "choices": "0.0.3",
-    "gulp-jshint": "^1.7.1"
+    "choices": "0.0.4",
+    "gulp": "^3.8.11",
+    "gulp-bump": "^0.3.0",
+    "gulp-jshint": "^1.10.0",
+    "jshint-stylish": "^1.0.1",
+    "mocha": "^2.2.4",
+    "node-edit": "0.0.1"
   }
 }
