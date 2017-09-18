@@ -1,31 +1,21 @@
 {
   "name": "express-as-promised",
-  "version": "0.1.11",
+  "version": "1.0.0",
   "description": "This is simply the Express we all know and love promisified.",
   "main": "main.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha ./spec"
   },
-  "author": "Michael Leaney <leahcimic@gmail.com> (http://lifememori.es)",
+  "author": "Michael Leaney <leahcimic@gmail.com> (https://lowerspendings.com/)",
   "repository": {
     "type": "git",
     "url": "https://github.com/leahcimic/express-as-promised"
   },
   "license": "ISC",
-  "dependencies": {
-    "bluebird": "^2.9.24",
-    "express": "^4.15.4",
-    "request": "^2.55.0",
-    "should": "^5.2.0"
-  },
   "devDependencies": {
-    "choices": "0.0.4",
-    "gulp": "^3.8.11",
-    "gulp-bump": "^0.3.0",
-    "gulp-jshint": "^1.10.0",
-    "jshint-stylish": "^1.0.1",
-    "mocha": "^2.2.4",
-    "node-edit": "0.0.1"
+    "request": "^2.55.0",
+    "should": "^5.2.0",
+    "mocha": "^2.2.4"
   },
   "peerDependencies": {
     "express": "^4.15.4"
