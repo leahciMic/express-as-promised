@@ -4,7 +4,7 @@
   "description": "This is simply the Express we all know and love promisified.",
   "main": "main.js",
   "scripts": {
-    "test": "npm install && ./node_modules/.bin/mocha ./spec"
+    "test": "./node_modules/.bin/mocha ./spec"
   },
   "author": "Michael Leaney <leahcimic@gmail.com> (http://lifememori.es)",
   "repository": {
@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^2.9.24",
-    "express": "^4.12.3",
+    "express": "^4.15.4",
     "request": "^2.55.0",
     "should": "^5.2.0"
   },
@@ -26,5 +26,8 @@
     "jshint-stylish": "^1.0.1",
     "mocha": "^2.2.4",
     "node-edit": "0.0.1"
+  },
+  "peerDependencies": {
+    "express": "^4.15.4"
   }
 }

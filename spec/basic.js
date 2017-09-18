@@ -1,10 +1,9 @@
-  var express = require('../main.js'),
-    request = require('request'),
-    bluebird = require('bluebird'),
-    app,
-    server,
-    PORT = Math.floor(Math.random() * 8000 + 16000),
-    URL = 'http://localhost:' + PORT;
+var express = require('../main.js'),
+  request = require('request'),
+  app,
+  server,
+  PORT = Math.floor(Math.random() * 8000 + 16000),
+  URL = 'http://localhost:' + PORT;
 
 var should = require('should');
 
@@ -30,9 +29,24 @@ describe('express-as-promised', function() {
     });
   });
 
+  describe('it should work on routers', function() {
+    it('test', function(done) {
+      const router = express.Router();
+      router.get('', (req, res) => {
+        return Promise.resolve('Hello world');
+      });
+      app.use('/foo', router);
+      request(URL + '/foo', function(error, response, body) {
+        response.statusCode.should.equal(200);
+        body.should.equal('Hello world');
+        done();
+      });
+    });
+  });
+
   it('should be able to return a resolved promise', function(done) {
     app.get('/', function() {
-      return bluebird.resolve('hello world');
+      return Promise.resolve('hello world');
     });
 
     request(URL, function(error, response, body) {
@@ -44,12 +58,17 @@ describe('express-as-promised', function() {
 
   it('should be able to return a rejected promise', function(done) {
     app.get('/', function() {
-      return bluebird.reject('bar');
+      return Promise.reject('bar');
+    });
+
+    app.use((err, req, res, next) => {
+      res.status(500);
+      res.send(`Err: ${err.toString()}`);
     });
 
     request(URL, function(error, response, body) {
       response.statusCode.should.equal(500);
-      body.should.equal('bar');
+      body.should.equal('Err: bar');
       done();
     });
   });
@@ -59,9 +78,14 @@ describe('express-as-promised', function() {
       throw new Error('Something went wrong');
     });
 
+    app.use((err, req, res, next) => {
+      res.status(500);
+      res.send(`Err: ${err.toString()}`);
+    });
+
     request(URL, function(error, response, body) {
       response.statusCode.should.equal(500);
-      body.should.startWith('Error: Something went wrong\n');
+      body.should.startWith('Err: Error: Something went wrong');
       done();
     });
   });
@@ -71,21 +95,14 @@ describe('express-as-promised', function() {
       return new Error('Not good');
     });
 
+    app.use((err, req, res, next) => {
+      res.status(500);
+      res.send(`Err: ${err.toString()}`);
+    });
+
     request(URL, function(error, response, body) {
       response.statusCode.should.equal(500);
-      body.should.startWith('Error: Not good');
-      done();
-    });
-  });
-
-  it('should return 201 for a post', function(done) {
-    app.post('/', function() {
-      return 'yes';
-    });
-
-    request.post(URL, function(error, response, body) {
-      response.statusCode.should.equal(201);
-      body.should.equal('yes');
+      body.should.startWith('Err: Error: Not good');
       done();
     });
   });

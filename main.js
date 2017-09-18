@@ -1,16 +1,13 @@
-// required dependencies
-var express = require('express'),
-    bluebird = require('bluebird');
-
-// is our environment production?
-var PRODUCTION = process.env.NODE_ENV == 'production';
+const express = require('express');
+const PRODUCTION = process.env.NODE_ENV == 'production';
 
 // this generic function is called with a route and will replace the generic verb
 // functions such as (get, post, put, delete, all), with new callbacks that are
 // aware of promises.
+
 function replaceMethod(app, verb) {
   // the original method we'll be overwriting
-  var originalMethod = app[verb].bind(app);
+  const originalMethod = app[verb].bind(app);
 
   // the new method that is aware of promises and return types
   app[verb] = function(route) {
@@ -22,15 +19,6 @@ function replaceMethod(app, verb) {
     var newCallbacks = callbacks.map(function(callback) {
       // return a new callback that is aware of promises
       return function(req, res, next) {
-        // returns generic 'Interal Server Error', or stack trace depending
-        // on environment
-        var getErrorMessage = function(e) {
-          if (PRODUCTION) {
-            return 'Internal Server Error';
-          }
-          return e instanceof Error ? e.stack : e;
-        };
-
         // converts the value of the original callback into a promise if it's
         // not already
         var promise = (function() {
@@ -39,17 +27,17 @@ function replaceMethod(app, verb) {
           // if the callback throws an error, return a rejected promise
           try {
             value = callback(req, res, next);
-          } catch(e) {
-            return bluebird.reject(getErrorMessage(e));
+          } catch (e) {
+            return Promise.reject(e);
           }
 
           // if the callback returns an error, return a rejected promise
           if (value instanceof Error) {
-            return bluebird.reject(getErrorMessage(value));
+            return Promise.reject(value);
           }
 
           // else return a resolved promise with the value of the callback
-          return bluebird.resolve(value);
+          return Promise.resolve(value);
         })();
 
         // once the promise is resolved
@@ -59,12 +47,6 @@ function replaceMethod(app, verb) {
             if (value === null || value === undefined) {
               return;
             }
-
-            // if it's a successful post change the status code to 201
-            if (verb == 'post' && res.statusCode == 200) {
-              res.statusCode = 201;
-            }
-
 
             var Stream = require('stream');
             if (value instanceof Stream) {
@@ -77,7 +59,7 @@ function replaceMethod(app, verb) {
           },
           function(error) {
             // if the promise is rejected, send the error
-            res.status(500).send(error);
+            return next(error);
           }
         );
       };
@@ -126,5 +108,11 @@ function createApplication() {
   return promisifyExpress(express());
 }
 
-// export it
+createApplication.Router = function() {
+  const route = express.Router();
+  return promisifyExpress(route);
+};
+
+createApplication.static = express.static.bind(express);
+
 module.exports = createApplication;
